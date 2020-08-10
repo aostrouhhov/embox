@@ -12,7 +12,10 @@
 #include <util/log.h>
 #include <framework/mod/options.h>
 
+/* FIX: add dependency */
+#include <kernel/time/ktime.h>
 #include <embox/unit.h>
+#include <kernel/printk.h>
 
 #include "stm32f4xx_hal.h"
 
@@ -32,6 +35,10 @@ static int usb_stm32f4_reset_hnd(struct lthread *self) {
 }
 
 /*** PCD Driver required functions ***/
+
+void HAL_Delay(uint32_t Delay) {
+	ksleep(Delay);
+}
 
 /**
  * @brief  Initializes the PCD MSP.
@@ -90,11 +97,21 @@ void HAL_PCD_MspDeInit(PCD_HandleTypeDef *hpcd) {
 	}
 }
 
+/**
+	* @brief  Connect callback.
+	* @param  hpcd: PCD handle
+	* @retval None
+	*/
+void HAL_PCD_ConnectCallback(PCD_HandleTypeDef *hpcd) {
+	printk("usb alert\n");
+}
+
 /*** END OF PCD Driver required functions ***/
 
 PCD_HandleTypeDef hpcd;
 extern void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd);
 static irq_return_t usb_stm32f4_usb_irq_handler(unsigned int irq_nr, void *data) {
+	printk("usb alert\n");
 	HAL_PCD_IRQHandler(&hpcd);
 	return IRQ_HANDLED;
 }
@@ -104,6 +121,7 @@ static int usb_stm32f4_init_test(void) {
 }
 
 int usb_stm32f4_init(void) {
+	printk("usb: setup\n");
 	int ret = 0;
 
 //	NVIC_SetPriority (SysTick_IRQn, 0);
