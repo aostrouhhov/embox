@@ -21,7 +21,7 @@
 
 #include <third_party/stmf4cube/usb_stm32f4.h>
 
-#define USB_IRQ OTG_FS_IRQn
+#define USB_IRQ OPTION_GET(NUMBER, irq)
 
 EMBOX_UNIT_INIT(usb_stm32f4_init_test);
 
