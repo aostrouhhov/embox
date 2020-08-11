@@ -13,6 +13,7 @@
 #include "stm32746g_discovery_lcd.h"
 #elif defined STM32F769xx
 #include "stm32f769i_discovery_lcd.h"
+#else
 #error Unsupported platform
 #endif
 
